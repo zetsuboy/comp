@@ -198,7 +198,7 @@ public:
 				break;
 			}
 			case NUM: {
-				std::cout << input[i] - '0' << std::endl;
+				std::string sss(1, input[i]);
 				if (isdigit(input[i])) {
 					num_buf = num_buf * current_base + CharsToInt[input[i]];
 					buf += input[i];
@@ -208,6 +208,14 @@ public:
 					i++;
 				}
 				else if (input[i] == '.') {
+					try {
+						if (input[i + 1] == '.') {
+							Lexem* lex = new Lexem(lex_id - line_skip_count, line_id, TypesName[INTEGER], std::to_string(num_buf), buf);
+							state = S;
+							return *lex;
+						}
+					}
+					catch (std::exception) { }
 					double_buf = num_buf;
 					i++;
 					state = DOUBLE;
@@ -218,10 +226,12 @@ public:
 					Lexem* lex = new Lexem(lex_id - line_skip_count, line_id, TypesName[INTEGER], std::to_string(num_buf), buf);
 					return *lex;
 				}
-				else if (SearchLexem(Operators, std::to_string(input[i])).first != -1) {
-					std::cout << "brr" << std::endl;
-					state = OPERATOR;
+				else if (SearchLexem(Operators, sss).first != -1) {
+					state = OPER;
 					Lexem* lex = new Lexem(lex_id - line_skip_count, line_id, TypesName[REAL], std::to_string(num_buf), buf);
+					buf = sss;
+					i++;
+					lex_id = i;
 					return *lex;
 				}
 				else {
@@ -230,10 +240,20 @@ public:
 				break;
 			}
 			case DOUBLE: {
+				std::string sss(1, input[i]);
+				std::cout << sss << std::endl;
 				if (isdigit(input[i])) {
 					double_buf = double_buf + (double)(input[i] - '0') / double_counter;
 					double_counter *= 10;
 					i++;
+				}
+				else if (SearchLexem(Operators, sss).first != -1) {
+					state = OPER;
+					Lexem* lex = new Lexem(lex_id - line_skip_count, line_id, TypesName[REAL], std::to_string(num_buf), buf);
+					buf = sss;
+					i++;
+					lex_id = i;
+					return *lex;
 				}
 				else if (input[i] == 'e') {
 					i++;
