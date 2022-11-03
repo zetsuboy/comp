@@ -1,0 +1,8 @@
+program test
+	var a, b, c : integer;
+	str : string;
+begin
+	a := 15000003;
+	c := a - b + $111;
+	str := 'abcawdawfawrSTRING))';
+end.

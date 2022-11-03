@@ -1,0 +1,4 @@
+﻿  comp.cpp
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(76,28): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(182,19): warning C4244: =: преобразование "__int64" в "double", возможна потеря данных
+  comp.vcxproj -> C:\Users\coolc\source\repos\comp\Debug\comp.exe
