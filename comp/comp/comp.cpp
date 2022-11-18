@@ -7,6 +7,8 @@
 #include <map>
 #include <iterator>
 #include <sstream>
+#include <windows.h>
+#include <cstdlib>
 
 class Lexem {
 public:
@@ -41,7 +43,7 @@ public:
 	}
 };
 
-class SyntaxA {
+class Lexer {
 private:
 	std::vector<std::string> Words = { "program", "var", "integer", "real", "bool", "string", "begin", "end", "if", "then", "else", "while", "do", "true", "false", "uses"};
 	std::vector<std::string> Delimiter = { ".", ";", ",", "(", ")" };
@@ -79,7 +81,7 @@ private:
 public:
 
 
-	SyntaxA(char* path) {
+	Lexer(std::string path) {
 		std::ifstream infile(path);
 		if (infile) {
 			std::stringstream str;
@@ -208,6 +210,10 @@ public:
 					i++;
 				}
 				else if (input[i] == '.') {
+					if (current_base != 10) {
+						state = ER;
+						break;
+					}
 					try {
 						if (input[i + 1] == '.') {
 							Lexem* lex = new Lexem(lex_id - line_skip_count, line_id, TypesName[INTEGER], std::to_string(num_buf), buf);
@@ -375,19 +381,127 @@ public:
 	}
 };
 
-int main(int argc, char* argv[]) {
-	SyntaxA s(argv[1]);
+class Node {
+public:
+	std::string val;
+	Node* left = nullptr;
+	Node* right = nullptr;
+};
+
+class SyntaxA {
+private:
+	std::vector<Lexem> lexes;
+	int token = 0;
+
+	Node* expression() {
+		Node* left_node = term();
+		if (left_node != nullptr && token < lexes.size() - 1) {
+			while (lexes[token].value == "+" || lexes[token].value == "-") {
+				Node *parent_node = new Node();
+				parent_node->val = lexes[token].value;
+				parent_node->left = left_node;
+				token++;
+				Node* right_node = term();
+				parent_node->right = right_node;
+				left_node = parent_node;
+				if (token >= lexes.size() - 1) break;
+			}
+			return left_node;
+		}
+		else
+			return left_node;
+	}
+
+	Node* term() {
+		Node *left_node = factor();
+		//Node *parent_node = new Node();
+		//parent_node->left = left_node;
+		if (left_node != nullptr && token < lexes.size() - 1) {
+			while (lexes[token].value == "*" || lexes[token].value == "/") {
+				Node* parent_node = new Node();
+				parent_node->left = left_node;
+				parent_node->val = lexes[token].value;
+				token++;
+				Node* right_node = factor();
+				parent_node->right = right_node;
+				left_node = parent_node;
+				if (token >= lexes.size() - 1) break;
+			}
+			return left_node;
+		}
+		else
+			return left_node;
+	}
+
+	Node* factor() {
+		if (lexes[token].lex_type == "Integer" || lexes[token].lex_type == "Real") {
+			Node *node = new Node();
+			node->val = lexes[token].value;
+			token++;
+			return node;
+		}
+		if (lexes[token].lex_type == "Identifier") {
+			Node* node = new Node();
+			node->val = lexes[token].value;
+			token++;
+			return node;
+		}
+		if (lexes[token].value == "(") {
+			token++;
+			Node* node = expression(); 
+			if (lexes[token].value != ")") {
+				return nullptr;
+			}
+			token++;
+			return node;
+		}
+		else return nullptr;
+	}
+public:
+	SyntaxA(std::vector<Lexem> l) {
+		lexes = l;
+	}
+
+	void printBT(const std::string& prefix, const Node* node, bool isLeft)
+	{
+		if (node != nullptr)
+		{
+			std::cout << prefix;
+			std::cout << (isLeft ? "├──" : "└──");
+
+			std::cout << node->val << std::endl;
+
+			printBT(prefix + (isLeft ? "│   " : "    "), node->left, true);
+			printBT(prefix + (isLeft ? "│   " : "    "), node->right, false);
+		}
+	}
+
+	void printBT()
+	{
+		printBT("", expression(), false);
+	}
+
+};
+//int main(int argc, char* argv[]) {
+int main() {
+	SetConsoleCP(1251);
+	SetConsoleOutputCP(1251);
+	//Lexer s(argv[1]);
+	Lexer s("tests/test5.txt");
+	std::vector<Lexem> lexes;
 	Lexem lex = ++s;
 	while (lex.error != true && lex.lex_type != "End") {
-		std::cout << lex.line_id << "	" << lex.id << "	" << lex.lex_type << "	" << lex.value << "	" << lex.default_value << std::endl;
+		//std::cout << lex.line_id << "	" << lex.id << "	" << lex.lex_type << "	" << lex.value << "	" << lex.default_value << std::endl;
+		lexes.push_back(lex);
 		lex = ++s;
 	}
-	if (lex.error == true) {
-		std::cout << lex.error_message << std::endl;
+	for (int i = 0; i < lexes.size(); i++) {
+		std::cout << lexes[i].line_id << "	" << lexes[i].id << "	" << lexes[i].lex_type << "	" << lexes[i].value << "	" << lexes[i].default_value << std::endl;
 	}
-	else {
-		std::cout << lex.line_id << "	" << lex.id << "	" << lex.lex_type << "	" << lex.value << "	" << lex.default_value << std::endl;
-	}
-	//std::cout << lex.line_id << "	" << lex.id << "	" << lex.lex_type << "	" << lex.value << "	" << lex.default_value << std::endl;
+	std::cout << std::endl;
+
+	SyntaxA synt(lexes);
+	synt.printBT();
+
 	return 0;
 }

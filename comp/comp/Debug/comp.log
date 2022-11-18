@@ -1,4 +1,17 @@
 ﻿  comp.cpp
-C:\Users\coolc\source\repos\comp\comp\comp.cpp(76,28): warning C4018: <: несоответствие типов со знаком и без знака
-C:\Users\coolc\source\repos\comp\comp\comp.cpp(182,19): warning C4244: =: преобразование "__int64" в "double", возможна потеря данных
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(95,28): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(225,19): warning C4244: =: преобразование "__int64" в "double", возможна потеря данных
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(377,9): warning C4018: >=: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(470,27): warning C4566: символ, представленный универсальным именем символа "\u251C", невозможно представить в текущей кодовой странице (1251)
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(470,27): warning C4566: символ, представленный универсальным именем символа "\u2500", невозможно представить в текущей кодовой странице (1251)
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(470,41): warning C4566: символ, представленный универсальным именем символа "\u2514", невозможно представить в текущей кодовой странице (1251)
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(470,41): warning C4566: символ, представленный универсальным именем символа "\u2500", невозможно представить в текущей кодовой странице (1251)
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(474,31): warning C4566: символ, представленный универсальным именем символа "\u2502", невозможно представить в текущей кодовой странице (1251)
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(475,31): warning C4566: символ, представленный универсальным именем символа "\u2502", невозможно представить в текущей кодовой странице (1251)
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(398,37): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(407,15): warning C4018: >=: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(419,37): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(428,15): warning C4018: >=: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(498,20): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\coolc\source\repos\comp\comp\comp.cpp(381): warning C4715: Lexer::operator++: значение возвращается не при всех путях выполнения
   comp.vcxproj -> C:\Users\coolc\source\repos\comp\Debug\comp.exe
